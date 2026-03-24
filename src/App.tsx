@@ -25,6 +25,8 @@ import {
 } from 'lucide-react';
 import { MOCK_LISTINGS, NEIGHBORHOODS, FAQS, Listing } from './constants';
 import NeighborhoodsPage from './pages/NeighborhoodsPage';
+import RentalsPage from './pages/RentalsPage';
+import AboutPage from './pages/AboutPage';
 
 // --- Components ---
 
@@ -64,10 +66,10 @@ const Navbar = () => {
           {/* Desktop Menu */}
           <div className="hidden md:flex items-center gap-8">
             <div className={`flex gap-6 font-medium ${linkClass}`}>
-              <Link to="/" className="hover:text-primary transition-colors">Rentals</Link>
+              <Link to="/rentals" className="hover:text-primary transition-colors">Rentals</Link>
               <Link to="/neighborhoods" className="hover:text-primary transition-colors">Neighborhoods</Link>
               <a href="#management" className="hover:text-primary transition-colors">Management</a>
-              <a href="#about" className="hover:text-primary transition-colors">About</a>
+              <Link to="/about" className="hover:text-primary transition-colors">About</Link>
             </div>
             <div className="flex items-center gap-4">
               <div className={`flex items-center gap-2 font-semibold ${textClass}`}>
@@ -96,10 +98,10 @@ const Navbar = () => {
             className="md:hidden bg-white border-t border-slate-100 overflow-hidden"
           >
             <div className="px-4 pt-2 pb-6 space-y-4">
-              <Link to="/" onClick={() => setIsOpen(false)} className="block text-lg font-medium text-slate-700 py-2">Rentals</Link>
+              <Link to="/rentals" onClick={() => setIsOpen(false)} className="block text-lg font-medium text-slate-700 py-2">Rentals</Link>
               <Link to="/neighborhoods" onClick={() => setIsOpen(false)} className="block text-lg font-medium text-slate-700 py-2">Neighborhoods</Link>
               <a href="#management" onClick={() => setIsOpen(false)} className="block text-lg font-medium text-slate-700 py-2">Property Management</a>
-              <a href="#about" onClick={() => setIsOpen(false)} className="block text-lg font-medium text-slate-700 py-2">About</a>
+              <Link to="/about" onClick={() => setIsOpen(false)} className="block text-lg font-medium text-slate-700 py-2">About</Link>
               <div className="pt-4 flex flex-col gap-3">
                 <button className="btn-primary w-full">List Your Rental</button>
                 <button className="btn-outline w-full">Apply Now</button>
@@ -556,11 +558,11 @@ const Footer = () => {
           <div>
             <h4 className="font-bold mb-6">Quick Links</h4>
             <ul className="space-y-4 text-slate-400 text-sm">
-              <li><a href="#" className="hover:text-white transition-colors">Available Rentals</a></li>
-              <li><a href="#" className="hover:text-white transition-colors">Neighborhood Guide</a></li>
-              <li><a href="#" className="hover:text-white transition-colors">List Your Property</a></li>
+              <li><Link to="/rentals" className="hover:text-white transition-colors">Available Rentals</Link></li>
+              <li><Link to="/neighborhoods" className="hover:text-white transition-colors">Neighborhood Guide</Link></li>
+              <li><a href="#management" className="hover:text-white transition-colors">List Your Property</a></li>
               <li><a href="#" className="hover:text-white transition-colors">Rental Application</a></li>
-              <li><a href="#" className="hover:text-white transition-colors">Renter Resources</a></li>
+              <li><Link to="/about" className="hover:text-white transition-colors">About Us</Link></li>
             </ul>
           </div>
 
@@ -631,7 +633,9 @@ export default function App() {
         <Navbar />
         <Routes>
           <Route path="/" element={<HomePage />} />
+          <Route path="/rentals" element={<RentalsPage />} />
           <Route path="/neighborhoods" element={<NeighborhoodsPage />} />
+          <Route path="/about" element={<AboutPage />} />
         </Routes>
         <Footer />
       </div>
