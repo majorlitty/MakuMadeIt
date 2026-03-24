@@ -132,7 +132,7 @@ const NeighborhoodsPage = () => {
                     </div>
 
                     <div className="flex flex-col sm:flex-row gap-4 pt-4">
-                      <Link to="/" className="btn-primary flex items-center justify-center gap-2">
+                      <Link to="/rentals" className="btn-primary flex items-center justify-center gap-2">
                         View Rentals in {n.name}
                       </Link>
                       <button className="btn-outline">Download Area Guide</button>

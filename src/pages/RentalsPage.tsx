@@ -3,7 +3,11 @@ import { motion } from 'motion/react';
 import { Search, MapPin, Bed, Bath, Maximize, Filter, SlidersHorizontal, ChevronDown } from 'lucide-react';
 import { MOCK_LISTINGS, Listing } from '../constants';
 
-const RentalsPage = () => {
+interface RentalsPageProps {
+  onScheduleTour: () => void;
+}
+
+const RentalsPage = ({ onScheduleTour }: RentalsPageProps) => {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedNeighborhood, setSelectedNeighborhood] = useState('All Neighborhoods');
   const [priceRange, setPriceRange] = useState('All Prices');
@@ -141,7 +145,7 @@ const RentalsPage = () => {
                     </div>
                     <div className="mt-auto grid grid-cols-2 gap-3">
                       <button className="btn-outline py-2 px-4 text-sm">View Details</button>
-                      <button className="btn-primary py-2 px-4 text-sm">Schedule Tour</button>
+                      <button onClick={onScheduleTour} className="btn-primary py-2 px-4 text-sm">Schedule Tour</button>
                     </div>
                   </div>
                 </motion.div>

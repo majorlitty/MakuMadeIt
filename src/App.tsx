@@ -27,8 +27,91 @@ import { MOCK_LISTINGS, NEIGHBORHOODS, FAQS, Listing } from './constants';
 import NeighborhoodsPage from './pages/NeighborhoodsPage';
 import RentalsPage from './pages/RentalsPage';
 import AboutPage from './pages/AboutPage';
+import ListYourRentalPage from './pages/ListYourRentalPage';
 
 // --- Components ---
+
+const TourModal = ({ isOpen, onClose }: { isOpen: boolean; onClose: () => void }) => {
+  const [isSubmitted, setIsSubmitted] = useState(false);
+
+  if (!isOpen) return null;
+
+  return (
+    <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
+      <motion.div 
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        exit={{ opacity: 0 }}
+        onClick={onClose}
+        className="absolute inset-0 bg-slate-900/60 backdrop-blur-sm"
+      />
+      <motion.div 
+        initial={{ opacity: 0, scale: 0.9, y: 20 }}
+        animate={{ opacity: 1, scale: 1, y: 0 }}
+        className="relative w-full max-w-lg bg-white rounded-3xl shadow-2xl overflow-hidden border border-slate-100"
+      >
+        <button 
+          onClick={onClose}
+          className="absolute top-4 right-4 w-10 h-10 flex items-center justify-center rounded-full bg-slate-100 text-slate-500 hover:bg-slate-200 transition-colors z-10"
+        >
+          <X size={20} />
+        </button>
+
+        {isSubmitted ? (
+          <div className="p-10 text-center">
+            <div className="w-20 h-20 bg-secondary/10 rounded-full flex items-center justify-center mx-auto mb-6 text-secondary">
+              <CheckCircle size={48} />
+            </div>
+            <h2 className="text-3xl font-bold text-slate-900 mb-4">Tour Requested!</h2>
+            <p className="text-slate-600 mb-8">
+              We've received your request. A local expert will contact you shortly to confirm your tour time.
+            </p>
+            <button onClick={onClose} className="btn-primary w-full">Close</button>
+          </div>
+        ) : (
+          <div className="p-8 md:p-10">
+            <h2 className="text-2xl font-bold text-slate-900 mb-2">Schedule a Tour</h2>
+            <p className="text-slate-500 mb-8">Choose a time that works for you and we'll handle the rest.</p>
+            
+            <form onSubmit={(e) => { e.preventDefault(); setIsSubmitted(true); }} className="space-y-4">
+              <div className="grid grid-cols-2 gap-4">
+                <div className="space-y-1">
+                  <label className="text-xs font-bold text-slate-400 uppercase tracking-wider">Full Name</label>
+                  <input required type="text" placeholder="John Doe" className="w-full px-4 py-3 rounded-xl bg-slate-50 border border-slate-100 focus:ring-2 focus:ring-primary/20 outline-none" />
+                </div>
+                <div className="space-y-1">
+                  <label className="text-xs font-bold text-slate-400 uppercase tracking-wider">Email</label>
+                  <input required type="email" placeholder="john@example.com" className="w-full px-4 py-3 rounded-xl bg-slate-50 border border-slate-100 focus:ring-2 focus:ring-primary/20 outline-none" />
+                </div>
+              </div>
+              <div className="space-y-1">
+                <label className="text-xs font-bold text-slate-400 uppercase tracking-wider">Phone Number</label>
+                <input required type="tel" placeholder="(817) 555-0123" className="w-full px-4 py-3 rounded-xl bg-slate-50 border border-slate-100 focus:ring-2 focus:ring-primary/20 outline-none" />
+              </div>
+              <div className="grid grid-cols-2 gap-4">
+                <div className="space-y-1">
+                  <label className="text-xs font-bold text-slate-400 uppercase tracking-wider">Preferred Date</label>
+                  <input required type="date" className="w-full px-4 py-3 rounded-xl bg-slate-50 border border-slate-100 focus:ring-2 focus:ring-primary/20 outline-none" />
+                </div>
+                <div className="space-y-1">
+                  <label className="text-xs font-bold text-slate-400 uppercase tracking-wider">Preferred Time</label>
+                  <select className="w-full px-4 py-3 rounded-xl bg-slate-50 border border-slate-100 focus:ring-2 focus:ring-primary/20 outline-none appearance-none">
+                    <option>Morning (9AM - 12PM)</option>
+                    <option>Afternoon (12PM - 4PM)</option>
+                    <option>Evening (4PM - 7PM)</option>
+                  </select>
+                </div>
+              </div>
+              <button type="submit" className="btn-primary w-full py-4 text-lg mt-4">
+                Request Tour
+              </button>
+            </form>
+          </div>
+        )}
+      </motion.div>
+    </div>
+  );
+};
 
 const ScrollToTop = () => {
   const { pathname } = useLocation();
@@ -76,7 +159,7 @@ const Navbar = () => {
                 <Phone size={18} className="text-accent" />
                 <span>(817) 555-0123</span>
               </div>
-              <button className="btn-primary py-2 px-5 text-sm">List Your Rental</button>
+              <Link to="/list-your-rental" className="btn-primary py-2 px-5 text-sm">List Your Rental</Link>
               <button className={`font-semibold text-sm ${scrolled || !isHome ? 'text-primary' : 'text-white'}`}>Apply Now</button>
             </div>
           </div>
@@ -103,7 +186,7 @@ const Navbar = () => {
               <a href="#management" onClick={() => setIsOpen(false)} className="block text-lg font-medium text-slate-700 py-2">Property Management</a>
               <Link to="/about" onClick={() => setIsOpen(false)} className="block text-lg font-medium text-slate-700 py-2">About</Link>
               <div className="pt-4 flex flex-col gap-3">
-                <button className="btn-primary w-full">List Your Rental</button>
+                <Link to="/list-your-rental" onClick={() => setIsOpen(false)} className="btn-primary w-full text-center">List Your Rental</Link>
                 <button className="btn-outline w-full">Apply Now</button>
               </div>
             </div>
@@ -164,10 +247,10 @@ const Hero = () => {
                 <input type="text" placeholder="Max Budget" className="w-full pl-10 pr-4 py-3 rounded-xl border-none bg-slate-50 focus:ring-2 focus:ring-primary/20 outline-none" />
               </div>
             </div>
-            <button className="btn-primary md:w-48 flex items-center justify-center gap-2">
+            <Link to="/rentals" className="btn-primary md:w-48 flex items-center justify-center gap-2">
               <Search size={20} />
               Search Rentals
-            </button>
+            </Link>
           </div>
 
           <div className="mt-8 flex flex-wrap gap-6">
@@ -217,7 +300,7 @@ const TrustSection = () => {
   );
 };
 
-const ListingCard = ({ listing, ...props }: { listing: Listing; [key: string]: any }) => {
+const ListingCard: React.FC<{ listing: Listing; onScheduleTour: () => void }> = ({ listing, onScheduleTour }) => {
   return (
     <motion.div 
       whileHover={{ y: -10 }}
@@ -265,14 +348,14 @@ const ListingCard = ({ listing, ...props }: { listing: Listing; [key: string]: a
         </div>
         <div className="mt-auto grid grid-cols-2 gap-3">
           <button className="btn-outline py-2 px-4 text-sm">View Details</button>
-          <button className="btn-primary py-2 px-4 text-sm">Schedule Tour</button>
+          <button onClick={onScheduleTour} className="btn-primary py-2 px-4 text-sm">Schedule Tour</button>
         </div>
       </div>
     </motion.div>
   );
 };
 
-const FeaturedRentals = () => {
+const FeaturedRentals = ({ onScheduleTour }: { onScheduleTour: () => void }) => {
   return (
     <section id="rentals" className="py-24 bg-slate-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -281,13 +364,13 @@ const FeaturedRentals = () => {
             <span className="text-primary font-bold tracking-wider uppercase text-sm">Available Now</span>
             <h2 className="text-3xl md:text-4xl font-bold text-slate-900 mt-2">Featured Arlington Rentals</h2>
           </div>
-          <button className="flex items-center gap-2 text-primary font-bold hover:gap-4 transition-all">
+          <Link to="/rentals" className="flex items-center gap-2 text-primary font-bold hover:gap-4 transition-all">
             View All 150+ Listings <ArrowRight size={20} />
-          </button>
+          </Link>
         </div>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           {MOCK_LISTINGS.map(listing => (
-            <ListingCard key={listing.id} listing={listing} />
+            <ListingCard key={listing.id} listing={listing} onScheduleTour={onScheduleTour} />
           ))}
         </div>
       </div>
@@ -511,7 +594,7 @@ const FAQSection = () => {
   );
 };
 
-const FinalCTA = () => {
+const FinalCTA = ({ onScheduleTour }: { onScheduleTour: () => void }) => {
   return (
     <section className="py-24 relative overflow-hidden">
       <div className="absolute inset-0 z-0">
@@ -527,8 +610,8 @@ const FinalCTA = () => {
         <h2 className="text-4xl md:text-5xl font-bold mb-6 italic">Your Next Rental in Arlington Is Waiting</h2>
         <p className="text-xl text-white/80 mb-10">Join thousands of happy renters who found their perfect home with us. New listings added every single week.</p>
         <div className="flex flex-col sm:flex-row gap-4 justify-center">
-          <button className="btn-primary py-4 px-10 text-lg">Browse Available Rentals</button>
-          <button className="bg-white/10 backdrop-blur-md hover:bg-white/20 text-white font-bold py-4 px-10 rounded-lg transition-all border border-white/20">Schedule a Tour Today</button>
+          <Link to="/rentals" className="btn-primary py-4 px-10 text-lg flex items-center justify-center">Browse Available Rentals</Link>
+          <button onClick={onScheduleTour} className="bg-white/10 backdrop-blur-md hover:bg-white/20 text-white font-bold py-4 px-10 rounded-lg transition-all border border-white/20">Schedule a Tour Today</button>
         </div>
       </div>
     </section>
@@ -560,7 +643,7 @@ const Footer = () => {
             <ul className="space-y-4 text-slate-400 text-sm">
               <li><Link to="/rentals" className="hover:text-white transition-colors">Available Rentals</Link></li>
               <li><Link to="/neighborhoods" className="hover:text-white transition-colors">Neighborhood Guide</Link></li>
-              <li><a href="#management" className="hover:text-white transition-colors">List Your Property</a></li>
+              <li><Link to="/list-your-rental" className="hover:text-white transition-colors">List Your Property</Link></li>
               <li><a href="#" className="hover:text-white transition-colors">Rental Application</a></li>
               <li><Link to="/about" className="hover:text-white transition-colors">About Us</Link></li>
             </ul>
@@ -611,33 +694,42 @@ const Footer = () => {
 
 // --- Main App ---
 
-const HomePage = () => (
+const HomePage = ({ onScheduleTour }: { onScheduleTour: () => void }) => (
   <>
     <Hero />
     <TrustSection />
-    <FeaturedRentals />
+    <FeaturedRentals onScheduleTour={onScheduleTour} />
     <Neighborhoods />
     <WhyRentWithUs />
     <HowItWorks />
     <LandlordSection />
     <FAQSection />
-    <FinalCTA />
+    <FinalCTA onScheduleTour={onScheduleTour} />
   </>
 );
 
 export default function App() {
+  const [isTourModalOpen, setIsTourModalOpen] = useState(false);
+
   return (
     <BrowserRouter>
       <ScrollToTop />
       <div className="min-h-screen">
         <Navbar />
         <Routes>
-          <Route path="/" element={<HomePage />} />
-          <Route path="/rentals" element={<RentalsPage />} />
+          <Route path="/" element={<HomePage onScheduleTour={() => setIsTourModalOpen(true)} />} />
+          <Route path="/rentals" element={<RentalsPage onScheduleTour={() => setIsTourModalOpen(true)} />} />
           <Route path="/neighborhoods" element={<NeighborhoodsPage />} />
           <Route path="/about" element={<AboutPage />} />
+          <Route path="/list-your-rental" element={<ListYourRentalPage />} />
         </Routes>
         <Footer />
+
+        <AnimatePresence>
+          {isTourModalOpen && (
+            <TourModal isOpen={isTourModalOpen} onClose={() => setIsTourModalOpen(false)} />
+          )}
+        </AnimatePresence>
       </div>
     </BrowserRouter>
   );
